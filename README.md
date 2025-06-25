@@ -1,6 +1,6 @@
 # PredictaFlow - AI-Powered Predictive Analytics SaaS
 
-A comprehensive, production-ready predictive analytics SaaS platform built with Next.js 14, TypeScript, and modern UI components. PredictaFlow provides industry-specific dashboards for retail, hospitality, and waste management sectors with real-time insights and AI-powered predictions.
+A comprehensive, production-ready predictive analytics SaaS platform built with Next.js 14, TypeScript, and modern UI components. PredictaFlow provides industry-specific dashboards for retail, hospitality, and waste management sectors with real-time insights and AI-powered predictions. 
 
 ## 🚀 Features
 
