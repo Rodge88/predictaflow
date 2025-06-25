@@ -162,9 +162,9 @@ export default function DashboardPage() {
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
                 <LineChart data={
-                  industry === 'retail' ? data.salesTrend :
-                  industry === 'hospitality' ? data.occupancyTrend :
-                  data.volumeTrend
+                  industry === 'retail' ? (data as any).salesTrend :
+                  industry === 'hospitality' ? (data as any).occupancyTrend :
+                  (data as any).volumeTrend
                 }>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis 
@@ -219,9 +219,9 @@ export default function DashboardPage() {
             <CardContent>
               <ResponsiveContainer width="100%" height={300}>
                 <BarChart data={
-                  industry === 'retail' ? data.topProducts :
-                  industry === 'hospitality' ? data.roomTypes :
-                  data.wasteTypes
+                  industry === 'retail' ? (data as any).topProducts :
+                  industry === 'hospitality' ? (data as any).roomTypes :
+                  (data as any).wasteTypes
                 }>
                   <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
                   <XAxis 
@@ -262,9 +262,9 @@ export default function DashboardPage() {
                 <PieChart>
                   <Pie
                     data={
-                      industry === 'retail' ? data.categoryBreakdown :
-                      industry === 'hospitality' ? data.revenueChannels :
-                      data.routePerformance
+                      industry === 'retail' ? (data as any).categoryBreakdown :
+                      industry === 'hospitality' ? (data as any).revenueChannels :
+                      (data as any).routePerformance
                     }
                     cx="50%"
                     cy="50%"
@@ -273,10 +273,10 @@ export default function DashboardPage() {
                     paddingAngle={5}
                     dataKey="value"
                   >
-                    {(industry === 'retail' ? data.categoryBreakdown :
-                      industry === 'hospitality' ? data.revenueChannels :
-                      data.routePerformance
-                    ).map((entry, index) => (
+                    {(industry === 'retail' ? (data as any).categoryBreakdown :
+                      industry === 'hospitality' ? (data as any).revenueChannels :
+                      (data as any).routePerformance
+                    ).map((entry: any, index: number) => (
                       <Cell key={`cell-${index}`} fill={entry.fill} />
                     ))}
                   </Pie>
@@ -304,7 +304,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {industry === 'retail' && data.inventoryAlerts.map((alert, index) => (
+                {industry === 'retail' && (data as any).inventoryAlerts.map((alert: any, index: number) => (
                   <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-3">
                       <div className={`h-3 w-3 rounded-full ${
@@ -324,7 +324,7 @@ export default function DashboardPage() {
                   </div>
                 ))}
 
-                {industry === 'hospitality' && data.upcomingEvents.map((event, index) => (
+                {industry === 'hospitality' && (data as any).upcomingEvents.map((event: any, index: number) => (
                   <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-3">
                       <Calendar className="h-5 w-5 text-blue-500" />
@@ -341,7 +341,7 @@ export default function DashboardPage() {
                   </div>
                 ))}
 
-                {industry === 'waste' && data.maintenanceAlerts.map((alert, index) => (
+                {industry === 'waste' && (data as any).maintenanceAlerts.map((alert: any, index: number) => (
                   <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
                     <div className="flex items-center gap-3">
                       <div className={`h-3 w-3 rounded-full ${

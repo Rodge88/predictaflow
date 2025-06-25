@@ -18,6 +18,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
+export const dynamic = 'force-dynamic'
+
 type FormData = {
   name: string
   email: string

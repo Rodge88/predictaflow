@@ -26,7 +26,21 @@ const predictionAccuracy = [
   { period: 'Week 4', accuracy: 88.7, confidence: 0.91 },
 ]
 
-const forecastData = retailData.salesTrend.slice(-7).concat([
+interface ForecastDataPoint {
+  timestamp: string;
+  actual?: number | null;
+  predicted: number;
+  confidence: number;
+}
+
+const historicalData = retailData.salesTrend.slice(-7).map(item => ({
+  timestamp: item.timestamp,
+  actual: item.actual,
+  predicted: item.predicted,
+  confidence: item.confidence
+}));
+
+const futureData: ForecastDataPoint[] = [
   { timestamp: '2024-02-16', actual: null, predicted: 26800, confidence: 0.87 },
   { timestamp: '2024-02-17', actual: null, predicted: 27200, confidence: 0.84 },
   { timestamp: '2024-02-18', actual: null, predicted: 26950, confidence: 0.86 },
@@ -34,7 +48,9 @@ const forecastData = retailData.salesTrend.slice(-7).concat([
   { timestamp: '2024-02-20', actual: null, predicted: 27800, confidence: 0.85 },
   { timestamp: '2024-02-21', actual: null, predicted: 29200, confidence: 0.81 },
   { timestamp: '2024-02-22', actual: null, predicted: 30500, confidence: 0.79 },
-])
+];
+
+const forecastData: ForecastDataPoint[] = [...historicalData, ...futureData];
 
 const anomalyData = [
   { date: '2024-01-15', value: 32000, anomaly: true, severity: 'high' },
@@ -198,8 +214,8 @@ export default function AnalyticsPage() {
                   <YAxis tick={{ fontSize: 12 }} />
                   <Tooltip 
                     labelFormatter={(value) => new Date(value).toLocaleDateString()}
-                    formatter={(value: number, name: string) => [
-                      value ? value.toLocaleString() : 'N/A',
+                    formatter={(value, name) => [
+                      value !== null && value !== undefined ? Number(value).toLocaleString() : 'N/A',
                       name === 'actual' ? 'Actual' : 'Predicted'
                     ]}
                   />

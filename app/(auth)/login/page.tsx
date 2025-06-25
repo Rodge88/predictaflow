@@ -19,6 +19,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 
+export const dynamic = 'force-dynamic'
+
 type FormData = {
   email: string
   password: string
