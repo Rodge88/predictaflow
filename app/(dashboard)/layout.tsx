@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { 
   BarChart3, 
   Home, 
@@ -33,8 +33,38 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
+  const router = useRouter()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [userMenuOpen, setUserMenuOpen] = useState(false)
+
+  const handleLogout = async () => {
+    try {
+      // Clear any stored auth tokens or session data
+      localStorage.removeItem('auth_token')
+      localStorage.removeItem('user_data')
+      sessionStorage.removeItem('auth_token')
+      sessionStorage.removeItem('user_data')
+      
+      // Clear cookies if any (for Supabase or custom auth)
+      document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;'
+      
+      // If using Supabase, uncomment this:
+      // const { createClient } = await import('@/lib/supabase/client')
+      // const supabase = createClient()
+      // await supabase.auth.signOut()
+      
+      // Redirect to login page
+      router.push('/login')
+      
+      // Close the dropdown
+      setUserMenuOpen(false)
+    } catch (error) {
+      console.error('Error during logout:', error)
+      // Force redirect even if there's an error
+      router.push('/login')
+    }
+  }
 
   return (
     <div className="h-screen flex overflow-hidden bg-gray-50 dark:bg-gray-900">
@@ -75,6 +105,30 @@ export default function DashboardLayout({
                 ))}
               </nav>
             </div>
+            
+            {/* Mobile User section */}
+            <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between p-4">
+                <div className="flex items-center">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-primary to-pink-600 flex items-center justify-center">
+                    <User className="h-4 w-4 text-white" />
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-200">John Doe</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">john@acme.com</p>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  title="Sign out"
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       )}
@@ -108,15 +162,26 @@ export default function DashboardLayout({
             </div>
             
             {/* User section */}
-            <div className="flex-shrink-0 flex border-t border-gray-200 dark:border-gray-700 p-4">
-              <div className="flex items-center">
-                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-primary to-pink-600 flex items-center justify-center">
-                  <User className="h-4 w-4 text-white" />
+            <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between p-4">
+                <div className="flex items-center">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-primary to-pink-600 flex items-center justify-center">
+                    <User className="h-4 w-4 text-white" />
+                  </div>
+                  <div className="ml-3">
+                    <p className="text-sm font-medium text-gray-700 dark:text-gray-200">John Doe</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">john@acme.com</p>
+                  </div>
                 </div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-700 dark:text-gray-200">John Doe</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">john@acme.com</p>
-                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  title="Sign out"
+                >
+                  <LogOut className="h-4 w-4" />
+                </Button>
               </div>
             </div>
           </div>
@@ -184,10 +249,7 @@ export default function DashboardLayout({
                       </Link>
                       <button
                         className="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        onClick={() => {
-                          setUserMenuOpen(false)
-                          // Handle logout
-                        }}
+                        onClick={handleLogout}
                       >
                         <LogOut className="inline h-4 w-4 mr-2" />
                         Sign out
