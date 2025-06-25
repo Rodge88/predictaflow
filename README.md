@@ -82,7 +82,7 @@ predictaflow/
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/rodge88/predictaflow.git
    cd predictaflow
    ```
 
@@ -161,6 +161,10 @@ predictaflow/
 - `npm run build` - Build for production
 - `npm run start` - Start production server
 - `npm run lint` - Run ESLint
+- `npm run lint:fix` - Auto-fix ESLint issues
+- `npm run type-check` - TypeScript validation
+- `npm run format` - Code formatting
+- `npm run precommit` - Pre-commit validation
 
 ### Code Quality
 - **TypeScript**: Full type safety throughout the application
