@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server"
-import Anthropic from "@anthropic-ai/sdk"
+import { GoogleGenAI } from "@google/genai"
 import type { Drawing, DrawingElement, GenerateDrawingRequest } from "@/lib/sketch/types"
 
 const SYSTEM_PROMPT = `You are a construction drawing generator. Given a description of a space, dimensions, and requirements, you generate structured drawing data as JSON.
@@ -40,34 +40,31 @@ Return ONLY the JSON, no other text. The JSON should match this structure:
 
 export async function POST(request: NextRequest) {
   try {
-    const apiKey = process.env.ANTHROPIC_API_KEY
+    const apiKey = process.env.GOOGLE_AI_API_KEY
     if (!apiKey) {
       return NextResponse.json(
-        { error: "ANTHROPIC_API_KEY not configured" },
+        { error: "GOOGLE_AI_API_KEY not configured" },
         { status: 500 }
       )
     }
 
     const body = (await request.json()) as GenerateDrawingRequest
 
-    const client = new Anthropic({ apiKey })
+    const ai = new GoogleGenAI({ apiKey })
 
     const prompt = buildPrompt(body)
 
-    const response = await client.messages.create({
-      model: "claude-sonnet-4-5-20250929",
-      max_tokens: 4096,
-      system: SYSTEM_PROMPT,
-      messages: [
-        {
-          role: "user",
-          content: prompt,
+    const response = await ai.models.generateContent({
+      model: "gemini-3-pro-preview",
+      contents: `${SYSTEM_PROMPT}\n\n${prompt}`,
+      config: {
+        thinkingConfig: {
+          thinkingLevel: "low",
         },
-      ],
+      },
     })
 
-    const text =
-      response.content[0].type === "text" ? response.content[0].text : ""
+    const text = response.text ?? ""
 
     // Parse the JSON response
     const jsonMatch = text.match(/\{[\s\S]*\}/)
